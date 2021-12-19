@@ -1,0 +1,66 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Demo for opeanapi"
+Transform: "AWS::Serverless-2016-10-31"
+Parameters:
+  ApiName:
+    Default: get_full_name
+    Type: String
+  EnvName:
+    Default: dev
+    Type: String
+  LayerArns:
+    Type: String
+    Default: ''
+Conditions:
+  HasLayerArns: !Not [!Equals [!Ref LayerArns, '']]
+Resources:
+  ServerlessApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: !Ref EnvName
+      DefinitionBody:
+        openapi: "3.0.1"
+        info:
+          title: "getFullName"
+          version: "2021-04-19T07:26:35Z"
+        servers:
+        - url: "https://5h3161g1ck.execute-api.ap-south-1.amazonaws.com/{basePath}"
+          variables:
+            basePath:
+              default: "/demo"
+        paths:
+          /:
+            get:
+              responses:
+                "200":
+                  description: "OK"
+                  content:
+                    application/json:
+                      schema:
+                        $ref: "#/components/schemas/FullName"
+              x-amazon-apigateway-integration:
+                httpMethod: "POST"
+                uri: "arn:aws:apigateway:ap-south-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-south-1:653950336741:function:get_full_name/invocations"
+                responses:
+                  default:
+                    statusCode: "200"
+                passthroughBehavior: "when_no_match"
+                # contentHandling: "CONVERT_TO_TEXT"
+                type: "aws_proxy"
+        components:
+          schemas:
+            Empty:
+              title: "Empty Schema"
+              type: "string"
+            FullName:
+              title: "Full Name of an user"
+              type: "object"
+              enum: [ Karthick Sabari ]
+  ServerlessLambdaPermission:
+    Type: "AWS::Lambda::Permission"
+    DependsOn:
+      - ServerlessApi
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref ApiName
+      Principal: apigateway.amazonaws.com

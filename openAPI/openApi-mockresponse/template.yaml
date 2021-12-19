@@ -1,0 +1,87 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Demo for opeanapi"
+Transform: "AWS::Serverless-2016-10-31"
+Parameters:
+  ApiName:
+    Default: get_full_name
+    Type: String
+  EnvName:
+    Default: dev
+    Type: String
+  LayerArns:
+    Type: String
+    Default: ''
+Conditions:
+  HasLayerArns: !Not [!Equals [!Ref LayerArns, '']]
+Resources:
+  ServerlessApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: !Ref EnvName
+      EndpointConfiguration: REGIONAL
+      DefinitionBody:
+        openapi: "3.0.1"
+        info:
+          title: "getFullName"
+          version: "1.0"
+        paths:
+          /:
+            get:
+              responses: {}
+                # '200':
+                #   description: "OK"
+                #   content:
+                #     application/json:
+                #       schema:
+                #        $ref: "#/components/schemas/FullName"
+              security:
+                - sigv4: []
+                - api_key: []
+              x-amazon-apigateway-integration:
+                httpMethod: "POST"
+                uri: 
+                  Fn::Sub: "arn:aws:apigateway:ap-south-1:lambda:path/2015-03-31/functions/arn:aws:lambda:ap-south-1:653950336741:function:get_full_name/invocations"
+                type: "aws_proxy"
+                responses: {}
+                  # '200':
+                  #   description: "Ok"
+
+                    # Approach I
+                    # content:
+                    #   application/json:
+                    #     schema:
+                    #       $ref: "#/components/schemas/FullName"
+
+                          # Approach II
+                          # remove $ref
+                          # FullName:
+                          #   type: "object"
+                          #   enum: [ Karthick Sabari ]
+
+                    # Approach III
+                    # should come under description
+                    # schema:
+                    #   type: "object"
+                    # examples:
+                    #   application/json:
+                    #     name: Karthick Sabari
+
+                passthroughBehavior: "when_no_match"
+                contentHandling: "CONVERT_TO_TEXT"
+        components:
+          schemas:
+            Empty:
+              title: "Empty Schema"
+              type: "string"
+            FullName:
+              title: "Full Name of an user"
+              type: "object"
+              enum: [ Karthick Sabari ]
+  ServerlessLambdaPermission:
+    Type: "AWS::Lambda::Permission"
+    DependsOn:
+      - ServerlessApi
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref ApiName
+      Principal: apigateway.amazonaws.com

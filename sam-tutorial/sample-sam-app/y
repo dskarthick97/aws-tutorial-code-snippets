@@ -1,0 +1,12 @@
+version = 0.1
+[y]
+[y.deploy]
+[y.deploy.parameters]
+stack_name = "sample-sam-stack"
+s3_bucket = "aws-sam-cli-managed-default-samclisourcebucket-7ylqorccrye0"
+s3_prefix = "sample-sam-stack"
+region = "ap-south-1"
+profile = "karthick-learner"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"
+image_repositories = []

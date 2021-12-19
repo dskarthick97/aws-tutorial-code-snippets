@@ -1,0 +1,39 @@
+{
+  "Records": [
+    {
+      "eventVersion": "2.1",
+      "eventSource": "aws:s3",
+      "awsRegion": "us-east-1",
+      "eventTime": "2021-03-26T09:03:44.270Z",
+      "eventName": "ObjectCreated:Put",
+      "userIdentity": {
+        "principalId": "AWS:AIDAI7W2NNQX7MDSC5PUQ"
+      },
+      "requestParameters": {
+        "sourceIPAddress": "157.48.241.205"
+      },
+      "responseElements": {
+        "x-amz-request-id": "FE87WK8F0KFBZGVD",
+        "x-amz-id-2": "G44JaQpaFbQfk0piHlSMhu+nktVMVO4v/8bihsvm3399hR9AqOq5aNoN1lTIQ/QcCVx4bkgHNo5NvmRQqGI41BMgAc7JlEjR"
+      },
+      "s3": {
+        "s3SchemaVersion": "1.0",
+        "configurationId": "AssetCreateEvent",
+        "bucket": {
+          "name": "webface-dev-assets",
+          "ownerIdentity": {
+            "principalId": "A1RB86GBCVS3R6"
+          },
+          "arn": "arn:aws:s3:::webface-dev-assets"
+        },
+        "object": {
+          "key": "private/assetmanager.png",
+          "size": 44564,
+          "eTag": "a26c5797246f621dc074575e098b0529",
+          "versionId": "nIm7h6mm9Y22Obqvqcyzfi81OXZK_FIm",
+          "sequencer": "00605DA372CDEC90B3"
+        }
+      }
+    }
+  ]
+}
